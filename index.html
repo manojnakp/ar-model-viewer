@@ -4,55 +4,137 @@
 	<title>Web Page</title>
 	<meta name="charset" content="utf-8" />
 	<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+	<link href="style.css" rel="stylesheet" />
 	<style>
-		html {
-			box-sizing: border-box;
-			font-size: 16px;
-			height: 100%;
-		}
-		*, *::after, *::before {
-			box-sizing: inherit;
-		}
-		button[slot="ar-button"] {
-			background-color: white; border-radius: 4px; border: none; position: absolute; top: 16px; right: 16px;
-		}
-		body {
-			margin: 0;
-			display: block;
-			min-height: 100vh;
-			height: 100%;
-		}
-		.model-container {
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			width: 100%;
-			height: 100%;
-		}
-		model-viewer {
-			width: 80%;
-			height: 80%;
-			border: 1px solid darkblue;
-			border-radius: 1rem;
-		}
-		h1 {
-			font-size: 2rem;
-		}
-		p, h1 {
-			padding: 1rem;
-			margin: 0;
-		}
 	</style>
 </head>
 <body>
 	<h1>AR models</h1>
 	<p>View 3d models in augmented reality with gestures and multitouch support</p>
-	<div class="model-container">
-		<model-viewer ar camera-controls touch-action="pan-y" src="models/Astronaut.glb" alt="A 3D model of an astronaut" poster="models/NeilArmstrong.webp">
-		  <button slot="ar-button">
-			  <img src="ar.svg" alt="AR" />
-		  </button>
-		</model-viewer>
+	<div class="models-list">
+		<div>
+			<h3>2-Cylinder engine</h3>
+			<div class="model-container">
+				<a class="icon-new" target="_blank" href="/engine">
+					<img src="arrow.svg" alt="NEW" />
+				</a>
+				<model-viewer ar camera-controls touch-action="pan-y" alt="A 3D model of a 2 cylinder engine" src="models/2CylinderEngine.gltf" poster="models/2CylinderEngine.png">
+					<button slot="ar-button">
+						<img src="ar.svg" alt="AR" />
+					</button>
+				</model-viewer>
+			</div>
+		</div>
+		<div>
+			<h3>Colorful cube</h3>
+			<div class="model-container">
+				<a class="icon-new" target="_blank" href="/cubes">
+					<img src="arrow.svg" alt="NEW" />
+				</a>
+				<model-viewer ar camera-controls touch-action="pan-y" alt="A 3D model of a colorful cube" src="models/textureCubes.glb" poster="models/textureCube.png">
+				  <button slot="ar-button">
+					  <img src="ar.svg" alt="AR" />
+				  </button>
+				</model-viewer>
+			</div>
+		</div>
+		<div>
+			<h3>Chair with dimensions</h3>
+			<div class="model-container">
+				<a class="icon-new" target="_blank" href="/chair">
+					<img src="arrow.svg" alt="NEW" />
+				</a>
+				<model-viewer id="dimension-chair" ar ar-modes="webxr" ar-scale="fixed" camera-orbit="-30deg auto auto" max-camera-orbit="auto 100deg auto" shadow-intensity="1" camera-controls touch-action="pan-y" src="models/Chair.glb" alt="A 3D model of an armchair." poster="models/ChairPoster.webp">
+					<button slot="hotspot-dot+X-Y+Z" class="dot" data-position="1 -1 1" data-normal="1 0 0"></button>
+					<button slot="hotspot-dim+X-Y" class="dim" data-position="1 -1 0" data-normal="1 0 0"></button>
+					<button slot="hotspot-dot+X-Y-Z" class="dot" data-position="1 -1 -1" data-normal="1 0 0"></button>
+					<button slot="hotspot-dim+X-Z" class="dim" data-position="1 0 -1" data-normal="1 0 0"></button>
+					<button slot="hotspot-dot+X+Y-Z" class="dot show" data-position="1 1 -1" data-normal="0 1 0"></button>
+					<button slot="hotspot-dim+Y-Z" class="dim show" data-position="0 -1 -1" data-normal="0 1 0"></button>
+					<button slot="hotspot-dot-X+Y-Z" class="dot show" data-position="-1 1 -1" data-normal="0 1 0"></button>
+					<button slot="hotspot-dim-X-Z" class="dim" data-position="-1 0 -1" data-normal="-1 0 0"></button>
+					<button slot="hotspot-dot-X-Y-Z" class="dot" data-position="-1 -1 -1" data-normal="-1 0 0"></button>
+					<button slot="hotspot-dim-X-Y" class="dim" data-position="-1 -1 0" data-normal="-1 0 0"></button>
+					<button slot="hotspot-dot-X-Y+Z" class="dot" data-position="-1 -1 1" data-normal="-1 0 0"></button>
+				</model-viewer>
+				<script type="module">
+					const modelViewer = document.querySelector('#dimension-chair');
+
+					modelViewer.addEventListener('load', () => {
+						const center = modelViewer.getBoundingBoxCenter();
+						const size = modelViewer.getDimensions();
+						const x2 = size.x / 2;
+						const y2 = size.y / 2;
+						const z2 = size.z / 2;
+
+						modelViewer.updateHotspot({
+							name: 'hotspot-dot+X-Y+Z',
+							position: `${center.x + x2} ${center.y - y2} ${center.z + z2}`
+						});
+
+						modelViewer.updateHotspot({
+							name: 'hotspot-dim+X-Y',
+							position: `${center.x + x2} ${center.y - y2} ${center.z}`
+						});
+						modelViewer.querySelector('button[slot="hotspot-dim+X-Y"]').textContent =
+								`${(size.z * 100).toFixed(0)} cm`;
+
+						modelViewer.updateHotspot({
+							name: 'hotspot-dot+X-Y-Z',
+							position: `${center.x + x2} ${center.y - y2} ${center.z - z2}`
+						});
+
+						modelViewer.updateHotspot({
+							name: 'hotspot-dim+X-Z',
+							position: `${center.x + x2} ${center.y} ${center.z - z2}`
+						});
+						modelViewer.querySelector('button[slot="hotspot-dim+X-Z"]').textContent =
+								`${(size.y * 100).toFixed(0)} cm`;
+
+						modelViewer.updateHotspot({
+							name: 'hotspot-dot+X+Y-Z',
+							position: `${center.x + x2} ${center.y + y2} ${center.z - z2}`
+						});
+
+						modelViewer.updateHotspot({
+							name: 'hotspot-dim+Y-Z',
+							position: `${center.x} ${center.y + y2} ${center.z - z2}`
+						});
+						modelViewer.querySelector('button[slot="hotspot-dim+Y-Z"]').textContent =
+								`${(size.x * 100).toFixed(0)} cm`;
+
+						modelViewer.updateHotspot({
+							name: 'hotspot-dot-X+Y-Z',
+							position: `${center.x - x2} ${center.y + y2} ${center.z - z2}`
+						});
+
+						modelViewer.updateHotspot({
+							name: 'hotspot-dim-X-Z',
+							position: `${center.x - x2} ${center.y} ${center.z - z2}`
+						});
+						modelViewer.querySelector('button[slot="hotspot-dim-X-Z"]').textContent =
+								`${(size.y * 100).toFixed(0)} cm`;
+
+						modelViewer.updateHotspot({
+							name: 'hotspot-dot-X-Y-Z',
+							position: `${center.x - x2} ${center.y - y2} ${center.z - z2}`
+						});
+
+						modelViewer.updateHotspot({
+							name: 'hotspot-dim-X-Y',
+							position: `${center.x - x2} ${center.y - y2} ${center.z}`
+						});
+						modelViewer.querySelector('button[slot="hotspot-dim-X-Y"]').textContent =
+								`${(size.z * 100).toFixed(0)} cm`;
+
+						modelViewer.updateHotspot({
+							name: 'hotspot-dot-X-Y+Z',
+							position: `${center.x - x2} ${center.y - y2} ${center.z + z2}`
+						});
+					});
+				</script>
+			</div>
+		</div>
 	</div>
 </body>
 </html>
