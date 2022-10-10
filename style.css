@@ -14,6 +14,10 @@ button[slot="ar-button"] {
     top: 16px;
     right: 16px;
 }
+button[slot="ar-button"] img {
+    width: 2.5rem;
+    height: 2.5rem;
+}
 body {
     margin: 0;
     display: block;
@@ -35,7 +39,7 @@ model-viewer {
 h1 {
     font-size: 2rem;
 }
-p, h1 {
+p, h1, h2, h3 {
     padding: 1rem;
     margin: 0;
 }
